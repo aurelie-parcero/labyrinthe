@@ -1,0 +1,40 @@
+body {
+
+}
+
+h3 {
+    text-align: center;
+}
+
+.labs {
+    position: relative;
+}
+
+.lab {
+    position: relative;
+    margin: auto;
+}
+
+.square {
+    position: absolute;
+    background-color: #302d30;
+}
+
+.wall-0 {
+    border-top: 1px darkred solid;
+}
+
+.wall-1 {
+    border-right: 1px darkred solid;
+}
+.wall-2 {
+    border-bottom: 1px darkred solid;
+}
+
+.wall-3 {
+    border-left: 1px darkred solid;
+}
+
+.size-btn {
+    margin: 5px;
+}
