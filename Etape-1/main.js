@@ -14,8 +14,8 @@ $(document).ready(function () {
                         'y': 0
                     },
                     'exit': {
-                        'x': size,
-                        'y': size
+                        'x': parseInt(size - 1),
+                        'y': parseInt(size - 1)
                     },
                     'squares': []
                 }
@@ -27,10 +27,8 @@ $(document).ready(function () {
                         'canMoveTo': canMoveTo(size, square.posX, square.posY, square.walls),
                         'walls': square.walls
                     }
-                    // labyrinthe[squarePos] = squareData;
                     labyrinthe['squares'].push(squareData);
                 });
-                // sizeGroup.push(labyrinthe);
 
                 sizeGroup.splice(i, 0, labyrinthe);
                 i++;
@@ -66,16 +64,31 @@ $(document).ready(function () {
                     }
                 }
 
-                let domSquare = '<div style="top:' + squareSize * posX + 'px; left:' + squareSize * posY + 'px; height:' + squareSize + 'px; width:' + squareSize + 'px;" class="square ' + classes.join(' ') + '"></div>';
+                if(square.x === currentLab['current-position'].x && square.y === currentLab['current-position'].y) {
+                    classes.push('is-active');
+                }
+
+                if(square.x === currentLab['exit'].x && square.y === currentLab['exit'].y) {
+                    classes.push('exit');
+                }
+
+                let domSquare = '<div style="top:' + squareSize * posX + 'px; left:' + squareSize * posY + 'px; height:' + squareSize + 'px; width:'
+                    + squareSize + 'px;" class="square ' + classes.join(' ') + '"></div>';
                 squares.push(domSquare);
 
             });
+
             let domLab = '<div class="lab lab-' + size + '-' + index + '">' + squares.join(' ') + '</div>';
+
+
 
             $('.labs').append(domLab);
 
 
+
         }
+
+
 
         $('.size-btn').on('click', function () {
             let size = $(this).attr('value');

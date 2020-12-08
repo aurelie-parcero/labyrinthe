@@ -39,3 +39,11 @@ h3 {
 .size-btn {
     margin: 5px;
 }
+
+.is-active {
+    background-color: orange;
+}
+
+.exit {
+    background-color: green;
+}
