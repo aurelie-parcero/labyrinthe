@@ -8,7 +8,17 @@ $(document).ready(function () {
             let sizeGroup = [];
             let i = 0;
             $.each(group, function (label, lab) { // chaque labyrinthe
-                let labyrinthe = [];
+                let labyrinthe = {
+                    'current-position' : {
+                        'x': 0,
+                        'y': 0
+                    },
+                    'exit': {
+                        'x': size,
+                        'y': size
+                    },
+                    'squares': []
+                }
                 $.each(lab, function (index, square) { // Chaque case du labyrithe
                     // let squarePos = square.posX + '-' + square.posY;
                     let squareData = {
@@ -18,7 +28,7 @@ $(document).ready(function () {
                         'walls': square.walls
                     }
                     // labyrinthe[squarePos] = squareData;
-                    labyrinthe.push(squareData);
+                    labyrinthe['squares'].push(squareData);
                 });
                 // sizeGroup.push(labyrinthe);
 
@@ -46,7 +56,7 @@ $(document).ready(function () {
             let currentLab = dataLab[size][index];
             let squares = [];
 
-            currentLab.forEach(function (square, index) {
+            currentLab['squares'].forEach(function (square, index) {
                 let classes = [];
                 let posX = square.x;
                 let posY = square.y;
@@ -64,24 +74,20 @@ $(document).ready(function () {
 
             $('.labs').append(domLab);
 
-            let currentDomLab = $('.lab-' + size + '-' + index);
-            currentDomLab.css('height', size + '00');
-
 
         }
 
-        $('.size-btn').on('click', function (){
+        $('.size-btn').on('click', function () {
             let size = $(this).attr('value');
-            let labsNum = dataLab[size].length - 1;
+            let labsNum = dataLab[size].length;
 
-            let chosenLab = Math.floor((Math.random() * labsNum ));
+            let chosenLab = Math.floor((Math.random() * labsNum));
             $('.lab').detach();
             drawLab(parseInt(size), parseInt(chosenLab));
         });
 
 
     });
-
 
 
     function canMoveTo(maxSize, x, y, walls) {

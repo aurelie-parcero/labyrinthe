@@ -11,8 +11,9 @@ h3 {
 }
 
 .lab {
+    width: 600px;
     position: relative;
-    margin: auto;
+    margin: 50px auto;
 }
 
 .square {
