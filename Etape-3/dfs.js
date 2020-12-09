@@ -84,15 +84,22 @@ $(document).ready(function () {
 
         }
 
+        let i = 0;
 
         $('.controls').on('click', '.start-btn', onStartClick);
 
         function onStartClick() {
+            i = 0;
+            $('.result').detach();
+            currentLab['squares'].forEach(function (square, index) {
+                square.visited = false;
+            });
             dfsResolve(currentLab, currentLab['current-position']);
         }
 
 
         $('.size-btn').on('click', function () {
+            $('.result').detach();
             let size = $(this).attr('value');
             let labsNum = dataLab[size].length;
 
@@ -104,17 +111,16 @@ $(document).ready(function () {
             currentLab = dataLab[size][chosenLab];
         });
 
-        let i = 0;
+
 
         async function dfsResolve(lab, position) {
             showStack(lab);
             showPosition(position);
-            console.log(position);
             if (lab.exit === position) {
-                console.log('found it!');
-                return position;
+                let displayResult = '<div class="result">Sortie trouvée en <p class="count">' + i + '</p> déplacements!</div>';
+                $('.result-container').prepend(displayResult);
+                return i;
             }
-
             i++;
 
             lab['squares'][position].visited = true;
@@ -128,7 +134,6 @@ $(document).ready(function () {
                 if (lab['squares'][neighbourIndex].visited === false) {
 
                     let timeout = 1 / lab.size * 1000;
-                    console.log(timeout);
                     await new Promise(resolve => setTimeout(resolve, timeout));
 
                     let result = await dfsResolve(lab, neighbourIndex);
@@ -142,8 +147,9 @@ $(document).ready(function () {
 
         function showStack(currentLab) {
             currentLab['squares'].forEach(function (square, index) {
+                let posId = '#' + index;
+                $('.lab').find(posId).removeClass('visited');
                 if (square.visited === true) {
-                    let posId = '#' + index;
                     $('.lab').find(posId).addClass('visited');
                 }
             })

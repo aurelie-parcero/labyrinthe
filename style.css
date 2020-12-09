@@ -28,6 +28,7 @@ h3 {
 .wall-1 {
     border-right: 1px darkred solid;
 }
+
 .wall-2 {
     border-bottom: 1px darkred solid;
 }
@@ -49,16 +50,18 @@ h3 {
     flex-flow: row wrap;
     justify-content: center;
 }
+
 .container-labs {
-padding-top: 10px;
+    padding-top: 10px;
 }
+
 .size-btn {
-    margin: 5px;
+    margin: 3px;
 }
 
 .is-active {
     border: 3px solid #302d30;
-    background-color: orange!important;
+    background-color: orange !important;
     transition: 0.2s ease;
 }
 
@@ -73,9 +76,19 @@ padding-top: 10px;
 }
 
 .visited {
-    /*border: 1px solid #302d30;*/
-    /*height: 95%;*/
-    /*width: 95%;*/
     background-color: #4a3d4a;
     transition: 0.2s ease;
+}
+
+.result-container {
+    height: 50px;
+}
+
+.result {
+    text-align: center;
+}
+.count {
+    display: inline;
+    font-weight: 900;
+    color: darkred;
 }
