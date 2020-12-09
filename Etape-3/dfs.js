@@ -1,22 +1,17 @@
 $(document).ready(function () {
 
-
     let dataLab = [];
 
     $.getJSON("../labyrinthes.json", function (data) {
+        let currentLab = null;
         $.each(data, function (size, group) { // chaque groupe de taille
             let sizeGroup = [];
             let i = 0;
             $.each(group, function (label, lab) { // chaque labyrinthe
                 let labyrinthe = {
-                    'current-position' : {
-                        'x': 0,
-                        'y': 0
-                    },
-                    'exit': {
-                        'x': parseInt(size - 1),
-                        'y': parseInt(size - 1)
-                    },
+                    'size': size,
+                    'current-position': 0,
+                    'exit': lab.length - 1,
                     'squares': []
                 }
                 $.each(lab, function (index, square) { // Chaque case du labyrithe
@@ -25,7 +20,8 @@ $(document).ready(function () {
                         'x': square.posX,
                         'y': square.posY,
                         'canMoveTo': canMoveTo(size, square.posX, square.posY, square.walls),
-                        'walls': square.walls
+                        'walls': square.walls,
+                        'visited': false
                     }
                     labyrinthe['squares'].push(squareData);
                 });
@@ -35,7 +31,6 @@ $(document).ready(function () {
             });
             dataLab[size] = sizeGroup;
         });
-
         chooseSize();
 
         function chooseSize() {
@@ -64,30 +59,37 @@ $(document).ready(function () {
                     }
                 }
 
-                if(square.x === currentLab['current-position'].x && square.y === currentLab['current-position'].y) {
+                if (index === currentLab['current-position']) {
                     classes.push('is-active');
                 }
 
-                if(square.x === currentLab['exit'].x && square.y === currentLab['exit'].y) {
+                if (index === currentLab['exit']) {
                     classes.push('exit');
                 }
 
-                let domSquare = '<div style="top:' + squareSize * posX + 'px; left:' + squareSize * posY + 'px; height:' + squareSize + 'px; width:'
+                let domSquare = '<div id="' + index + '" style="top:' + squareSize * posY + 'px; left:' + squareSize * posX + 'px; height:' + squareSize + 'px; width:'
                     + squareSize + 'px;" class="square ' + classes.join(' ') + '"></div>';
                 squares.push(domSquare);
 
             });
 
-            let domLab = '<div class="lab lab-' + size + '-' + index + '">' + squares.join(' ') + '</div>';
-
-
-
+            let domLab = '<div class="lab" id="lab-' + size + '-' + index + '">' + squares.join(' ') + '</div>';
+            let title = '<h3 class="lab-level">Labyrinthe de niveau ' + size + ' !</h3>';
+            $('.container-labs').prepend(title);
             $('.labs').append(domLab);
 
+            let btn = '<button class="btn btn-secondary start-btn start-' + size + '-' + index + '" data-target="#lab-' + size + '-' + index + '" data-size="' + size + '" data-index="' + index + '">Start</button>';
 
+            $('.controls').append(btn);
 
         }
 
+
+        $('.controls').on('click', '.start-btn', onStartClick);
+
+        function onStartClick() {
+            dfsResolve(currentLab, currentLab['current-position']);
+        }
 
 
         $('.size-btn').on('click', function () {
@@ -95,10 +97,65 @@ $(document).ready(function () {
             let labsNum = dataLab[size].length;
 
             let chosenLab = Math.floor((Math.random() * labsNum));
+            $('h3.lab-level').detach();
+            $('.start-btn').detach();
             $('.lab').detach();
             drawLab(parseInt(size), parseInt(chosenLab));
+            currentLab = dataLab[size][chosenLab];
         });
 
+        let i = 0;
+
+        async function dfsResolve(lab, position) {
+            showStack(lab);
+            showPosition(position);
+            console.log(position);
+            if (lab.exit === position) {
+                console.log('found it!');
+                return position;
+            }
+
+            i++;
+
+            lab['squares'][position].visited = true;
+
+            let neighbours = lab['squares'][position]['canMoveTo'];
+
+            for (const neighbourPos of neighbours) {
+
+                let neighbourIndex = neighbourPos.x + neighbourPos.y * lab.size;
+
+                if (lab['squares'][neighbourIndex].visited === false) {
+
+                    let timeout = 1 / lab.size * 1000;
+                    console.log(timeout);
+                    await new Promise(resolve => setTimeout(resolve, timeout));
+
+                    let result = await dfsResolve(lab, neighbourIndex);
+
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+        }
+
+        function showStack(currentLab) {
+            currentLab['squares'].forEach(function (square, index) {
+                if (square.visited === true) {
+                    let posId = '#' + index;
+                    $('.lab').find(posId).addClass('visited');
+                }
+            })
+        }
+
+        function showPosition(pos) {
+            let posId = '#' + pos;
+            $('.lab').find('.square').each(function () {
+                $(this).removeClass('is-active');
+            });
+            $('.lab').find(posId).addClass('is-active');
+        }
 
     });
 
@@ -124,7 +181,4 @@ $(document).ready(function () {
         return canMoveTo;
     }
 
-})
-;
-
-
+});

@@ -13,7 +13,7 @@ h3 {
 .lab {
     width: 600px;
     position: relative;
-    margin: 50px auto;
+    margin: 40px auto;
 }
 
 .square {
@@ -36,14 +36,46 @@ h3 {
     border-left: 1px darkred solid;
 }
 
+.choose-label {
+    text-align: center;
+    padding-top: 30px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: darkred;
+}
+
+.choose {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+.container-labs {
+padding-top: 10px;
+}
 .size-btn {
     margin: 5px;
 }
 
 .is-active {
-    background-color: orange;
+    border: 3px solid #302d30;
+    background-color: orange!important;
+    transition: 0.2s ease;
 }
 
 .exit {
+    border: 3px solid #302d30;
     background-color: green;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-around;
+}
+
+.visited {
+    /*border: 1px solid #302d30;*/
+    /*height: 95%;*/
+    /*width: 95%;*/
+    background-color: #4a3d4a;
+    transition: 0.2s ease;
 }
